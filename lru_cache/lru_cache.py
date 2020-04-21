@@ -28,15 +28,15 @@ class LRUCache:
         # moves that key to the end of the order (move to the head of the line (MRU))
         # return none if the key pair doesnt exist in cache
         # return value associated with the key if it does exist
+        #print(f"current storage: {self.storage}")
         if key not in self.storage:
             return None
+
         node = self.storage[key]
 
         #if the node is at the MRU already just return. else: add it to the front and delete it 
-        if self.key_values.head == node:
-            return node.value
         self.key_values.move_to_front(node)
-        return node.value
+        return node.value[1]
 
 
     """
@@ -56,14 +56,16 @@ class LRUCache:
         # if key already exists overwrite the old value with the new. delete then add?
         if key in self.storage:
             node = self.storage[key]
-            node.value = value
+            node.value = (key, value)
 
-            if self.key_values.head != node:
-                self.key_values.move_to_front(node)
-        else:
-            new_node = ListNode(value)
-            if self.size == self.limit:
-                del self.storage[self.key_values.tail.key]
-                self.key_values.remove_from_tail()
-            self.key_values.add_to_head(new_node)
-            self.storage[key] = new_node
+            return
+
+        if self.size == self.limit:
+           val = self.key_values.remove_from_tail()
+
+           del self.storage[val[0]]
+           self.size -= 1
+
+        self.key_values.add_to_head((key, value))
+        self.storage[key] = self.key_values.head
+        self.size += 1
