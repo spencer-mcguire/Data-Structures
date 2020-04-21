@@ -69,3 +69,9 @@ class LRUCache:
         self.key_values.add_to_head((key, value))
         self.storage[key] = self.key_values.head
         self.size += 1
+
+
+""" QUESTION:
+If my limit is set to default 10 how does the cache know that the limit is now 3??? 
+I am a little confused on how that is working
+"""
